@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>兼容所有浏览器的图片预览</title>
+<script type="text/javascript" src="jquery-1.7.2.min.js"></script>
+<script type="text/javascript">
+$(function(){
+	$("#uploadImage").on("change", function(){
+		var type = this.value.substring(this.value.lastIndexOf(".") + 1, this.value.length).toLowerCase();
+		if (type != "jpg" && type != "bmp" && type != "gif" && type != "png") {
+			alert("请上传正确的图片格式");
+			$(this).val('');
+			return false;
+		}
+		if (!+[1,]) {
+			document.getElementById('uploadPreview').filters.item("DXImageTransform.Microsoft.AlphaImageLoader").src = this.value;
+		} else {
+			var files = !!this.files ? this.files : [];
+			if (!files.length || !window.FileReader) return;
+			if (/^image/.test( files[0].type)){
+				var reader = new FileReader();
+				reader.readAsDataURL(files[0]);
+				reader.onloadend = function(){
+					$("#uploadPreview").css("background-image", "url("+this.result+")");
+				}
+			}
+		}
+	});
+});
+</script>
+<style type="text/css">
+#uploadPreview {
+	width: 168px; height: 168px;
+	background-position: center center;
+	background-size: cover;
+	border: 4px solid #ccc;
+	display: inline-block;
+	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale);
+}
+</style>
+</head>
+<body>
+	<div id="uploadPreview"></div><br/>
+	<input id="uploadImage" type="file" name="file" />
+</body>
+</html>
